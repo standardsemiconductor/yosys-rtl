@@ -1,4 +1,4 @@
-# Yosys RTL: Haskell definition & prettyprinter
+# Yosys RTL: Haskell definition & rendering
 ![Haskell CI](https://github.com/standardsemiconductor/yosys-rtl/actions/workflows/haskell.yml/badge.svg)
 [![Hackage][hackage-badge]][hackage]
 [![Hackage Dependencies][hackage-deps-badge]][hackage-deps]
