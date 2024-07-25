@@ -23,6 +23,17 @@ tests :: [TestTree]
 tests =
   [ testGroup "pretty"
     [ prettyTest' "led" rtlLed
+    , prettyTest' "add" $
+        addC
+          "\\adder"
+          False
+          32
+          False
+          32
+          33
+          (SigSpecWireId "\\a")
+          (SigSpecWireId "\\b")
+          (SigSpecWireId "\\y")
     ]
   , testGroup "synth"
     [ synthTest "led" rtlLed

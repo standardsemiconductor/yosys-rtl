@@ -39,6 +39,7 @@ module Yosys.Rtl
   , CellStmt(..)
   , CellId(..)
   , CellType(..)
+  , ParamType(..)
   , CellBodyStmt(..)
   , CellEndStmt(..)
   , -- *** Unary cells
