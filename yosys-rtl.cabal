@@ -2,7 +2,7 @@ cabal-version:      3.0
 name:               yosys-rtl
 version:            0.1.0.0
 synopsis:           Yosys RTL Intermediate Language
-description:        Definition and prettyprinter.
+description:        Definition and rendering.
                     See https://yosyshq.readthedocs.io/projects/yosys/en/latest/
                     for RTL text representation documentation.
 homepage:           https://github.com/standardsemiconductor/yosys-rtl
