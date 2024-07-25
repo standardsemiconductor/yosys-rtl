@@ -60,9 +60,8 @@ jobs:
     - name: build
       run: cabal build all
 
-# TODO
-#    - name: check
-#      run: cabal check
+    - name: check
+      run: cabal check
 
     - name: document
       run: cabal haddock
