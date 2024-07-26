@@ -34,6 +34,24 @@ tests =
           (SigSpecWireId "\\a")
           (SigSpecWireId "\\b")
           (SigSpecWireId "\\y")
+    , let three :: Value
+          three = Value 2 [B1, B1]
+      in testGroup "Value"
+           [ prettyUnitTest "Pretty Three" three "2'11"
+           , fromStringTest "String Three" "2'11" three
+           ]
+    , let four :: Constant
+          four = ConstantValue $ Value 3 [B1, B0, B0]
+      in testGroup "Constant"
+           [ prettyUnitTest "Pretty Four" four "3'100"
+           , fromStringTest "String Four" "3'100" four
+           ]
+    , let five :: SigSpec
+          five = SigSpecConstant $ ConstantValue $ Value 3 [B1, B0, B1]
+      in testGroup "SigSpec"
+           [ prettyUnitTest "Pretty Five" five "3'101"
+           , fromStringTest "String Five" "3'101" five
+           ]
     ]
   , testGroup "synth"
     [ synthTest "led" rtlLed
@@ -50,12 +68,24 @@ prettyTest curDir n = goldenVsString n (curDir </> n <.> "pretty")
 prettyTest' :: Pretty a => TestName -> a -> TestTree
 prettyTest' = prettyTest $ "test" </> "Test" </> "Yosys" </> "Rtl" </> "golden"
 
+prettyUnitTest :: Pretty p => TestName -> p -> Text -> TestTree
+prettyUnitTest n p t = testCase n $ (render . pretty) p @?= t
 
 synthTest :: TestName -> File -> TestTree
 synthTest n rtl = testCase n $ withTempFile $ \t -> do
   TIO.writeFile t $ render $ pretty rtl
   let c = "yosys -q -p \"synth_ice40\" -f rtlil " <> t
   (ExitSuccess @=?) =<< waitForProcess =<< spawnCommand c
+
+fromStringTest
+  :: Eq a
+  => IsString a
+  => Show a
+  => TestName
+  -> String
+  -> a          -- ^ expected
+  -> TestTree
+fromStringTest n s a = testCase n $ fromString s @?= a
 
 rtlLed :: File
 rtlLed = File Nothing
