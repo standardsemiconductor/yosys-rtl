@@ -85,7 +85,8 @@ module Yosys.Rtl
   , -- *** Multiplexers
     muxC
   , -- *** Memories
-    memInitV2C
+    memRdV2C
+  , memInitV2C
   , -- ** Processes
     Process(..)
   , ProcStmt(..)
@@ -524,6 +525,49 @@ muxC cellId w a b s y = Cell
   , CellConnect "\\B" b
   , CellConnect "\\S" s
   , CellConnect "\\Y" y
+  ]
+  CellEndStmt
+
+memRdV2C
+  :: CellId
+  -> Constant -- ^ MEMID
+  -> Constant -- ^ ABITS
+  -> Constant -- ^ WIDTH
+  -> Constant -- ^ CLK_ENABLE
+  -> Constant -- ^ CLK_POLARITY
+  -> Constant -- ^ TRANSPARENCY_MASK
+  -> Constant -- ^ COLLISION_X_MASK
+  -> Constant -- ^ ARST_VALUE
+  -> Constant -- ^ SRST_VALUE
+  -> Constant -- ^ INIT_VALUE
+  -> Constant -- ^ CE_OVER_SRST
+  -> SigSpec  -- ^ CLK
+  -> SigSpec  -- ^ EN
+  -> SigSpec  -- ^ ADDR
+  -> SigSpec  -- ^ DATA
+  -> SigSpec  -- ^ ARST
+  -> SigSpec  -- ^ SRST
+  -> Cell
+memRdV2C cid mid abits w ce cpol tmask xmask arstVal srstVal initVal ceSrst clk en a d arst srst = Cell
+  []
+  (CellStmt "$memrd_v2" cid)
+  [ CellParameter Nothing "\\MEMID"             mid
+  , CellParameter Nothing "\\ABITS"             abits
+  , CellParameter Nothing "\\WIDTH"             w
+  , CellParameter Nothing "\\CLK_ENABLE"        ce
+  , CellParameter Nothing "\\CLK_POLARITY"      cpol
+  , CellParameter Nothing "\\TRANSPARENCY_MASK" tmask
+  , CellParameter Nothing "\\COLLISION_X_MASK"  xmask
+  , CellParameter Nothing "\\ARST_VALUE"        arstVal
+  , CellParameter Nothing "\\SRST_VALUE"        srstVal
+  , CellParameter Nothing "\\INIT_VALUE"        initVal
+  , CellParameter Nothing "\\CE_OVER_SRST"      ceSrst
+  , CellConnect "\\CLK"  clk
+  , CellConnect "\\EN"   en
+  , CellConnect "\\ADDR" a
+  , CellConnect "\\DATA" d
+  , CellConnect "\\ARST" arst
+  , CellConnect "\\SRST" srst
   ]
   CellEndStmt
 
