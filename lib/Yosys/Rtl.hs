@@ -86,7 +86,9 @@ module Yosys.Rtl
     muxC
   , -- *** Memories
     memRdV2C
+  , memWrV2C
   , memInitV2C
+  , memV2C
   , -- ** Processes
     Process(..)
   , ProcStmt(..)
@@ -571,6 +573,37 @@ memRdV2C cid mid abits w ce cpol tmask xmask arstVal srstVal initVal ceSrst clk 
   ]
   CellEndStmt
 
+memWrV2C
+  :: CellId
+  -> Constant -- ^ MEMID
+  -> Constant -- ^ ABITS
+  -> Constant -- ^ WIDTH
+  -> Constant -- ^ CLK_ENABLE
+  -> Constant -- ^ CLK_POLARITY
+  -> Constant -- ^ PORTID
+  -> Constant -- ^ PRIORITY_MASK
+  -> SigSpec  -- ^ CLK
+  -> SigSpec  -- ^ EN
+  -> SigSpec  -- ^ ADDR
+  -> SigSpec  -- ^ DATA
+  -> Cell
+memWrV2C cid mid abits w ce cpol pid pmask clk en a d = Cell
+  []
+  (CellStmt "$memwr_v2" cid)
+  [ CellParameter Nothing "\\MEMID"         mid
+  , CellParameter Nothing "\\ABITS"         abits
+  , CellParameter Nothing "\\WIDTH"         w
+  , CellParameter Nothing "\\CLK_ENABLE"    ce
+  , CellParameter Nothing "\\CLK_POLARITY"  cpol
+  , CellParameter Nothing "\\PORTID"        pid
+  , CellParameter Nothing "\\PRIORITY_MASK" pmask
+  , CellConnect "\\CLK"  clk
+  , CellConnect "\\EN"   en
+  , CellConnect "\\ADDR" a
+  , CellConnect "\\DATA" d
+  ]
+  CellEndStmt
+
 memInitV2C
   :: CellId
   -> Constant -- ^ MEMID
@@ -591,6 +624,75 @@ memInitV2C cellId memId aBits w wrds p a d= Cell
   , CellParameter Nothing "\\PRIORITY" p
   , CellConnect "\\ADDR" a
   , CellConnect "\\DATA" d
+  ]
+  CellEndStmt
+
+memV2C
+  :: CellId
+  -> Constant -- ^ MEMID
+  -> Constant -- ^ SIZE
+  -> Constant -- ^ ABITS
+  -> Constant -- ^ WIDTH
+  -> Constant -- ^ INIT
+  -> Constant -- ^ RD_PORTS
+  -> Constant -- ^ RD_WIDE_CONTINUATION
+  -> Constant -- ^ RD_CLK_ENABLE
+  -> Constant -- ^ RD_CLK_POLARITY
+  -> Constant -- ^ RD_TRANSPARENCY_MASK
+  -> Constant -- ^ RD_COLLISION_X_MASK
+  -> Constant -- ^ RD_CE_OVER_SRST
+  -> Constant -- ^ RD_INIT_VALUE
+  -> Constant -- ^ RD_ARST_VALUE
+  -> Constant -- ^ RD_SRST_VALUE
+  -> Constant -- ^ WR_PORTS
+  -> Constant -- ^ WR_WIDE_CONTINUATION
+  -> Constant -- ^ WR_CLK_ENABLE
+  -> Constant -- ^ WR_CLK_POLARITY
+  -> Constant -- ^ WR_PRIORITY_MASK
+  -> SigSpec  -- ^ RD_CLK
+  -> SigSpec  -- ^ RD_EN
+  -> SigSpec  -- ^ RD_ADDR
+  -> SigSpec  -- ^ RD_DATA
+  -> SigSpec  -- ^ RD_ARST
+  -> SigSpec  -- ^ RD_SRST
+  -> SigSpec  -- ^ WR_CLK
+  -> SigSpec  -- ^ WR_EN
+  -> SigSpec  -- ^ WR_ADDR
+  -> SigSpec  -- ^ WR_DATA
+  -> Cell
+memV2C ci mid s abits w ini rps rwc rce rcpol rtm rcxm rcos riv rav rsv wps wwc wce wcpol wpm rclk ren raddr rdata rarst rsrst wclk wen waddr wdata = Cell
+  []
+  (CellStmt "$mem_v2" ci)
+  [ CellParameter Nothing "\\MEMID"                mid
+  , CellParameter Nothing "\\SIZE"                 s
+  , CellParameter Nothing "\\ABITS"                abits
+  , CellParameter Nothing "\\WIDTH"                w
+  , CellParameter Nothing "\\INIT"                 ini
+  , CellParameter Nothing "\\RD_PORTS"             rps
+  , CellParameter Nothing "\\RD_WIDE_CONTINUATION" rwc
+  , CellParameter Nothing "\\RD_CLK_ENABLE"        rce
+  , CellParameter Nothing "\\RD_CLK_POLARITY"      rcpol
+  , CellParameter Nothing "\\RD_TRANSPARENCY_MASK" rtm
+  , CellParameter Nothing "\\RD_COLLISION_X_MASK"  rcxm
+  , CellParameter Nothing "\\RD_CE_OVER_SRST"      rcos
+  , CellParameter Nothing "\\RD_INIT_VALUE"        riv
+  , CellParameter Nothing "\\RD_ARST_VALUE"        rav
+  , CellParameter Nothing "\\RD_SRST_VALUE"        rsv
+  , CellParameter Nothing "\\WR_PORTS"             wps
+  , CellParameter Nothing "\\WR_WIDE_CONTINUATION" wwc
+  , CellParameter Nothing "\\WR_CLK_ENABLE"        wce
+  , CellParameter Nothing "\\WR_CLK_POLARITY"      wcpol
+  , CellParameter Nothing "\\WR_PRIORITY_MASK"     wpm
+  , CellConnect "\\RD_CLK"  rclk
+  , CellConnect "\\RD_EN"   ren
+  , CellConnect "\\RD_ADDR" raddr
+  , CellConnect "\\RD_DATA" rdata
+  , CellConnect "\\RD_ARST" rarst
+  , CellConnect "\\RD_SRST" rsrst
+  , CellConnect "\\WR_CLK"  wclk
+  , CellConnect "\\WR_EN"   wen
+  , CellConnect "\\WR_ADDR" waddr
+  , CellConnect "\\WR_DATA" wdata
   ]
   CellEndStmt
 
