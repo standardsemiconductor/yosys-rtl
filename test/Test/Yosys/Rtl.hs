@@ -19,11 +19,11 @@ import Test.Tasty.HUnit
 import Test.Tasty.Golden
 import Yosys.Rtl
 
-tests :: [TestTree]
-tests =
+tests :: FilePath -> [TestTree]
+tests dataDir =
   [ testGroup "pretty"
-    [ prettyTest' "led" rtlLed
-    , prettyTest' "add" $
+    [ prettyTest' dataDir "led" rtlLed
+    , prettyTest' dataDir "add" $
         addC
           "\\adder"
           False
@@ -65,8 +65,8 @@ prettyTest :: Pretty a => FilePath -> TestName -> a -> TestTree
 prettyTest curDir n = goldenVsString n (curDir </> n <.> "pretty")
                         . return . fromString . T.unpack . render . pretty
 
-prettyTest' :: Pretty a => TestName -> a -> TestTree
-prettyTest' = prettyTest $ "test" </> "Test" </> "Yosys" </> "Rtl" </> "golden"
+prettyTest' :: Pretty a => FilePath -> TestName -> a -> TestTree
+prettyTest' dataDir = prettyTest $ dataDir </> "Yosys" </> "Rtl" </> "golden"
 
 prettyUnitTest :: Pretty p => TestName -> p -> Text -> TestTree
 prettyUnitTest n p t = testCase n $ (render . pretty) p @?= t
