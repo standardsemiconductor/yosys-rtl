@@ -48,9 +48,19 @@ tests dataDir =
            ]
     , let five :: SigSpec
           five = SigSpecConstant $ ConstantValue $ Value 3 [B1, B0, B1]
+          sigSpecA :: SigSpec
+          sigSpecA = SigSpecWireId "\\a"
       in testGroup "SigSpec"
-           [ prettyUnitTest "Pretty Five" five "3'101"
-           , fromStringTest "String Five" "3'101" five
+           [ fromStringTest "String Five" "3'101" five
+           , testGroup "Pretty"
+               [ prettyUnitTest "Five" five "3'101"
+               , prettyUnitTest "WireId" (SigSpecWireId "\\wireId") "\\wireId"
+               , prettyUnitTest "Slice" (SigSpecSlice sigSpecA 3 Nothing) "\\a [3]"
+               , prettyUnitTest "Slice range" (SigSpecSlice sigSpecA 0 (Just 2)) "\\a [0:2]"
+               , prettyUnitTest "Slice ranges"
+                   (SigSpecSlice (SigSpecSlice sigSpecA 7 (Just 0)) 2 Nothing)
+                   "\\a [7:0] [2]"
+               ]
            ]
     ]
   , testGroup "synth"
