@@ -1,6 +1,6 @@
 cabal-version:      3.0
 name:               yosys-rtl
-version:            0.1.0.0
+version:            0.1.0.1
 synopsis:           Yosys RTL Intermediate Language
 description:        Definition and rendering.
                     See https://yosyshq.readthedocs.io/projects/yosys/en/latest/
