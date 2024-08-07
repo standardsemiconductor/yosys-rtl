@@ -1,6 +1,6 @@
 # Revision history for yosys-rtl
 
-## 0.1.0.1 -- yyyy-mm-dd
+## 0.1.0.1 -- 2024-08-08
 
 * Add memory cells
 
