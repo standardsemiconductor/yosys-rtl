@@ -94,8 +94,9 @@ jobs:
     - name: install yosys
       working-directory: yosys
       run: |
-        make -j$(nproc)
-        sudo make install
+        cmake -B build . -DCMAKE_BUILD_TYPE=Release
+        cmake --build build --config Release --parallel $(nproc)
+        sudo cmake --install build --strip
 
     - name: test
       run: cabal run test -- --no-create
